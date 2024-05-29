@@ -217,5 +217,8 @@ sudo docker run --rm --network="host" -e VIDEO_PATH="rtsp://localhost:8554/mystr
 ## 5. Image inshow outside the Docker
 
 ```bash
+xhost +local:docker
 sudo docker run --rm -it --network="host" -e VIDEO_PATH="rtsp://localhost:8554/mystream" -e DISPLAY=$DISPLAY  -v /tmp/.X11-unix:/tmp/.X11-unix test:v2
+xhost -local:docker
+
 ```
