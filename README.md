@@ -155,7 +155,7 @@ sudo docker run -it --rm -v ./K146.mp4:/app/K146.mp4 -e VIDEO_PATH="./K146.mp4" 
 
 
 
-## 4.Mount local MP4 to Docker container
+## 4.Mount stream MP4 to Docker container
 
 ### Dockerfile
 ```dockerfile
