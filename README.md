@@ -239,7 +239,7 @@ xhost -local:docker
 
 New Docker CLI API Support for NVIDIA GPUs under Docker Engine 
 https://collabnix.com/introducing-new-docker-cli-api-support-for-nvidia-gpus-under-docker-engine-19-03-0-beta-release/
-'''bash
+```bash
 sudo systemctl restart docker
 sudo docker run -it --rm --gpus all ubuntu:20.04 nvidia-smi
-'''
+```
