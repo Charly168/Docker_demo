@@ -224,3 +224,21 @@ sudo docker run --rm -it --network="host" -e VIDEO_PATH="rtsp://localhost:8554/m
 xhost -local:docker
 
 ```
+
+
+## 6. Image inshow outside the Docker with GPU
+
+```bash
+xhost +local:docker
+./mediamtx
+ffmpeg -re -stream_loop -1 -i K146.mp4 -c copy -f rtsp rtsp://localhost:8554/mystream
+sudo docker run --rm -it --gpus all --network="host" -e VIDEO_PATH="rtsp://localhost:8554/mystream" -e DISPLAY=$DISPLAY  -v /tmp/.X11-unix:/tmp/.X11-unix test:v2
+xhost -local:docker
+
+```
+New Docker CLI API Support for NVIDIA GPUs under Docker Engine 
+https://collabnix.com/introducing-new-docker-cli-api-support-for-nvidia-gpus-under-docker-engine-19-03-0-beta-release/
+'''
+sudo systemctl restart docker
+sudo docker run -it --rm --gpus all ubuntu:20.04 nvidia-smi
+'''
