@@ -236,7 +236,39 @@ sudo docker run --rm -it --gpus all --network="host" -e VIDEO_PATH="rtsp://local
 xhost -local:docker
 
 ```
+    - Installing NVIDIA Container Runtime
+    Create a file named nvidia-container-runtime-script.sh and save it
+    ```bash
+    echo "curl -s -L https://nvidia.github.io/nvidia-container-runtime/gpgkey | \
+      sudo apt-key add -
+    distribution=\$(. /etc/os-release;echo \$ID\$VERSION_ID)
+    curl -s -L https://nvidia.github.io/nvidia-container-runtime/\$distribution/nvidia-container-runtime.list | \
+      sudo tee /etc/apt/sources.list.d/nvidia-container-runtime.list
+    sudo apt-get update" >> nvidia-container-runtime-script.sh
 
+    ```
+    - Execute the script
+    ```bash
+    sh nvidia-container-runtime-script.sh
+    apt-get install nvidia-container-runtime
+    which nvidia-container-runtime-hook
+    ```
+
+    - Installing Docker 19.03 Beta 3 Test Build
+    ```bash
+    curl -fsSL https://test.docker.com -o test-docker.sh 
+    ```
+
+    - Execute the script
+    ```bash
+    sh test-docker.sh
+    ```
+
+    - Running a Ubuntu container which leverages GPUs
+    ```bash
+    docker run -it --rm --gpus all ubuntu nvidia-smi
+    ```
+    
 New Docker CLI API Support for NVIDIA GPUs under Docker Engine 
 https://collabnix.com/introducing-new-docker-cli-api-support-for-nvidia-gpus-under-docker-engine-19-03-0-beta-release/
 ```bash
