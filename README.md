@@ -277,3 +277,64 @@ sudo docker run -it --rm --gpus all ubuntu:20.04 nvidia-smi
 ```
 
 ![MARKDOWN](https://github.com/guodongxiaren/README)
+
+
+FROM python:3.8-slim
+
+RUN apt-get update && apt-get install -y \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    libglib2.0-0 \
+    ffmpeg
+
+RUN pip install opencv-python-headless flask
+
+WORKDIR /app
+COPY . /app
+
+CMD ["python", "app.py"]
+
+
+from flask import Flask, Response
+import cv2
+
+app = Flask(__name__)
+
+def generate_frames():
+    cap = cv2.VideoCapture(0)
+    while True:
+        success, frame = cap.read()
+        if not success:
+            break
+        else:
+            ret, buffer = cv2.imencode('.jpg', frame)
+            frame = buffer.tobytes()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+@app.route('/video_feed')
+def video_feed():
+    return Response(generate_frames(),
+                    mimetype='multipart/x-mixed-replace; boundary=frame')
+
+@app.route('/')
+def index():
+    return '''
+    <html>
+    <head>
+        <title>Video Streaming</title>
+    </head>
+    <body>
+        <h1>Video Streaming</h1>
+        <img src="/video_feed">
+    </body>
+    </html>
+    '''
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
+
+
+docker build -t opencv-flask-app .
+docker run -p 5000:5000 opencv-flask-app
